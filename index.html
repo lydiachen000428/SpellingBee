@@ -45,6 +45,11 @@ button{box-shadow:0 4px 0 var(--ink);transition:transform .08s}button:active:not
 .pr{grid-template-columns:repeat(3,1fr)}.pr button{font-size:20px;padding:12px 4px}.pr span{font-size:34px}
 .c0{background:#ffd95a;color:#1d2b4f}.c1{background:#7bd88f;color:#1d2b4f}.c2{background:#8ec5ff;color:#1d2b4f}.c3{background:#ffa7c4;color:#1d2b4f}.c4{background:#c8a8ff;color:#1d2b4f}
 .ok,.no{font-weight:800}.ok::before{content:'🎉 '}.no::before{content:'💪 '}
+
+.wdz{font-family:'Andika','Comic Sans MS',sans-serif;font-size:clamp(30px,9vw,44px);font-weight:700;text-align:center;letter-spacing:.06em;margin:14px 0;min-height:64px;line-height:1.5}
+.wdz .bl{display:inline-block;min-width:1.1em;border-bottom:5px solid var(--ink);margin:0 2px;color:transparent}.wdz .bl.on{background:var(--sun);border-radius:8px}.wdz .fl{color:var(--green)}.gap{display:inline-block;width:.5em}
+.lts{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}.lts button{font-family:'Andika','Comic Sans MS',sans-serif;font-size:38px;font-weight:800;padding:10px 0;min-height:68px}.lts button.x{opacity:.4;background:var(--red);color:#fff}
+.chips.l i{font-size:20px}
 </style></head><body><main id="app"></main>
 <script>
 var raw=[
@@ -95,5 +100,43 @@ var D=['8/31','9/7','9/14','9/21','9/28','10/5','10/12','10/19','10/26','11/2'];
 function weeks(){var n=W.length-1,h=bk('home()')+'<h2>選擇週次</h2><button class="feat" onclick="week('+n+')"><span class="tag">本週</span><b>第 '+(n+1)+' 週</b><small>'+D[n]+' 起</small><div class="chips">'+W[n].map(function(w){return '<i>'+esc(w.e)+'</i>'}).join('')+'</div></button><h3>以前的週次</h3><div class="grid ol">';for(var i=n-1;i>=0;i--){h+='<button class="c'+(i%5)+'" onclick="week('+i+')"><b>第 '+(i+1)+' 週</b><small>'+D[i]+' 起</small></button>'}A.innerHTML=h+'</div>'}
 function week(i){st.w=i;var l=W[i],hot=i==W.length-1,h=bk('weeks()')+'<h2>第 '+(i+1)+' 週'+(hot?' <span class="tag">本週</span>':'')+'</h2><p class="sub">'+D[i]+' 起 · 點單字看意思、聽發音和句子</p><div class="grid wd">';l.forEach(function(w,k){h+='<button class="wc'+(hot?' hot':'')+'" onclick="learn('+k+')"><span>'+esc(w.e)+'</span><small>'+w.z+'</small></button>'});h+='</div><h2>練習</h2><div class="grid mn pr"><button class="c1" onclick="spell(0)"><span>✏️</span>拼字</button><button class="c2" onclick="sent(0)"><span>🧩</span>造句</button>'+(T[i]?'<button class="c3" onclick="story(0)"><span>📚</span>短文</button>':'')+'</div>';A.innerHTML=h}
 function learn(k){var l=W[st.w],w=l[k],s=S[w.e]?S[w.e].replace(/[\[\]]/g,''):'';A.innerHTML=bk('week('+st.w+')')+'<div class="card"><div class="w">'+esc(w.e)+'</div><div class="zh">'+w.z+'</div>'+(s?'<p class="sent">'+esc(s)+'</p>':'')+'<button class="big b" id="pw">🔊 聽單字</button>'+(s?'<button class="big" id="ps">🔊 聽句子</button>':'')+'</div><div class="row"><button '+(k?'':'disabled')+' onclick="learn('+(k-1)+')">← 上一個</button><span>'+(k+1)+' / '+l.length+'</span><button '+(k<l.length-1?'':'disabled')+' onclick="learn('+(k+1)+')">下一個 →</button></div>';document.getElementById('pw').onclick=function(){say(w.e)};var ps=document.getElementById('ps');if(ps)ps.onclick=function(){say(s)};say(w.e)}
+function shf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+function WR(){try{return JSON.parse(ld('vcWrong')||'{}')}catch(e){return{}}}
+function wrGet(i){var o=WR()[i]||{},ws=W[i].map(function(x){return x.e}),r={};Object.keys(o).forEach(function(k){if(ws.indexOf(k)>=0)r[k]=o[k]});return r}
+function wrSet(i,o){var a=WR();if(Object.keys(o).length)a[i]=o;else delete a[i];sv('vcWrong',JSON.stringify(a))}
+function plan(e){var n=e.replace(/[^A-Za-z]/g,'').length,nb=n<=5?1:2,c=[],V='aeiou',p=[],j;
+for(j=1;j<e.length;j++)if(/[a-z]/.test(e[j])&&/[A-Za-z]/.test(e[j-1]))c.push(j);
+c=shf(c);var v=c.filter(function(x){return V.indexOf(e[x])>=0});
+p.push(v.length?v[0]:c[0]);
+if(nb>1){var q=c.filter(function(x){return Math.abs(x-p[0])>1});if(q.length)p.push(q[0])}
+return p.sort(function(a,b){return a-b})}
+function lopts(c){var V='aeiou',cf={b:'dpq',d:'bpt',p:'bdq',q:'pg',m:'nw',n:'mh',c:'ksg',k:'cg',s:'cz',g:'jqc',j:'gy',t:'df',f:'vp',v:'fw',l:'ri',r:'lw',w:'vm',y:'ij',h:'nb',z:'sx',x:'zs',u:'ao',i:'ey',a:'eo',e:'ai',o:'au'},
+a=shf((cf[c]||'').split('')),b=shf((V.indexOf(c)>=0?V:'bdglmnprst').split('').filter(function(x){return x!=c&&a.indexOf(x)<0})),o=a.concat(b).slice(0,3);o.push(c);return shf(o)}
+function zhOf(i,e){for(var k=0;k<W[i].length;k++)if(W[i][k].e==e)return W[i][k].z;return''}
+function spell(){startSp(st.w,W[st.w].map(function(x){return x.e}),'n')}
+function spRetry(){var l=Object.keys(wrGet(st.w));if(l.length)startSp(st.w,shf(l),'r')}
+function startSp(wk,words,mode){st.w=wk;st.sp={wk:wk,words:words,k:0,first:0,bad:[],gone:0,mode:mode};spQ()}
+function spQ(){var P=st.sp,k=P.k;if(k>=P.words.length){spEnd();return}
+var e=P.words[k],zh=zhOf(P.wk,e),pl=plan(e),cur=0,miss=false,fill=[];
+A.innerHTML=bk('week('+P.wk+')')+'<div class="card"><div class="zh">'+(k+1)+' / '+P.words.length+(P.mode=='r'?' · 錯字重練':'')+'</div><div class="zh">'+zh+'</div><div class="wdz" id="wz"></div><button class="big b" id="pl">🔊 聽發音</button><div class="lts" id="lt"></div><div class="zh" id="fb"></div></div>';
+var wz=document.getElementById('wz'),lt=document.getElementById('lt'),fb=document.getElementById('fb');
+document.getElementById('pl').onclick=function(){say(e)};
+function draw(done){var h='';for(var j=0;j<e.length;j++){var ch=e[j],bi=pl.indexOf(j);
+if(ch==' ')h+='<span class="gap"></span>';else if(bi<0)h+=esc(ch);else if(bi<cur||done)h+='<span class="fl">'+ch+'</span>';else h+='<span class="bl'+(bi==cur?' on':'')+'">'+'&nbsp;</span>'}wz.innerHTML=h}
+function opts(){lt.innerHTML='';lopts(e[pl[cur]]).forEach(function(c){var b=document.createElement('button');b.textContent=c;b.className='c'+(c.charCodeAt(0)%5);
+b.onclick=function(){if(c==e[pl[cur]]){cur++;fb.textContent='';if(cur>=pl.length)fin();else{draw();opts()}}else{miss=true;b.className='x';b.disabled=true;fb.innerHTML='<span class="no">再想一想</span>'}};lt.appendChild(b)})}
+function fin(){draw(true);lt.innerHTML='';say(e);var o=wrGet(P.wk);
+if(miss){P.bad.push(e);o[e]=0}else{P.first++;if(P.mode=='r'){var n=(o[e]||0)+1;if(n>=2){delete o[e];P.gone++}else o[e]=n}}
+wrSet(P.wk,o);
+fb.innerHTML=(miss?'<span class="no">記下來了，等一下再練</span>':'<span class="ok">答對了！</span>')+'<button class="big b" id="nx">'+(k+1>=P.words.length?'看結果':'下一個')+'</button>';
+document.getElementById('nx').onclick=function(){P.k++;spQ()}}
+draw();opts();setTimeout(function(){say(e)},150)}
+function spEnd(){var P=st.sp,n=Object.keys(wrGet(P.wk)).length,h=bk('week('+P.wk+')')+'<div class="card"><h2>練習完成！</h2><p class="zh">一次答對 '+P.first+' / '+P.words.length+'</p>';
+if(P.gone)h+='<p class="zh ok">'+P.gone+' 個字已經練熟，從錯字清單移除</p>';
+if(P.bad.length){h+='<p class="zh">這次要再練：</p><div class="chips l">'+P.bad.map(function(x){return'<i>'+esc(x)+'</i>'}).join('')+'</div>'}
+h+='</div>';if(n)h+='<button class="big b" onclick="spRetry()">🔁 錯字重練（'+n+'）</button>';
+h+='<button class="big" onclick="spell()">✏️ 再練一次</button>';A.innerHTML=h}
+var _wk=week;week=function(i){_wk(i);var n=Object.keys(wrGet(i)).length;if(n)A.insertAdjacentHTML('beforeend','<button class="big b" onclick="spRetry()">🔁 錯字重練（'+n+'）</button>')};
+
 home();
 </script></body></html>
